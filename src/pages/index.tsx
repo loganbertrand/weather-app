@@ -12,6 +12,17 @@ import Button from "@/components/Button"
 export default function Home() {
 	const [textValue, setTextValue] = useState("")
 	const [temp, setTemp] = useState(0)
+	const [icon, setIcon] = useState("")
+	const [weather, setWeather] = useState({
+		temp: 0,
+		icon: "",
+		feelsLike: 0,
+		humidity: "",
+		windSpeed: "",
+		tempMax: 0,
+		tempMin: 0,
+		description: "",
+	})
 
 	const handleChange = (e: any) => {
 		setTextValue(e.target.value)
@@ -33,13 +44,19 @@ export default function Home() {
 		const apiKey = process.env.NEXT_PUBLIC_OPENWEATHER_API
 		try {
 			const response = await axios.get(
-				`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`
+				`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`
 			)
 			console.log("API response: ", response.data)
-			const tempF = Math.trunc(
-				(response.data.main.temp - 273.15) * (9 / 5) + 32
-			)
-			setTemp(tempF)
+			setWeather({
+				temp: Math.trunc(response.data.main.temp),
+				icon: response.data.weather[0].icon,
+				feelsLike: Math.trunc(response.data.main.feels_like),
+				humidity: response.data.main.humidity,
+				windSpeed: response.data.wind.speed,
+				tempMax: Math.trunc(response.data.main.temp_max),
+				tempMin: Math.trunc(response.data.main.temp_min),
+				description: response.data.weather[0].description,
+			})
 		} catch (error) {
 			console.log(error)
 		}
@@ -71,7 +88,21 @@ export default function Home() {
 						onKeyDown={checkKeyDown}
 					/>
 					<Button onClick={handleSubmit}>Submit</Button>
-					<p>Temperature: {temp} Degrees Fahrenheit</p>
+					<Icon
+						src={`https://openweathermap.org/img/wn/${
+							weather.icon ? weather.icon : "01d"
+						}@2x.png`}
+						width={100}
+						height={100}
+						alt="Icon of the type of weather"
+					/>
+					<p>{weather.description}</p>
+					<p>Temperature: {weather.temp}° F</p>
+					<p>Feels Like:{weather.feelsLike}° F</p>
+					<p>High:{weather.tempMax}° F</p>
+					<p>Low: {weather.tempMin}° F</p>
+					<p>Humidity:{weather.humidity}%</p>
+					<p>Wind:{weather.windSpeed} mph</p>
 				</div>
 
 				<div className={styles.grid}></div>
@@ -83,3 +114,5 @@ export default function Home() {
 const Title = styled.p`
 	font-size: 1.5rem;
 `
+
+const Icon = styled(Image)``

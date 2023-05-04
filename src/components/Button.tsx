@@ -17,6 +17,7 @@ const Button = (props: ButtonProps) => {
 export default Button
 
 const ButtonContainer = styled.div`
+	cursor: pointer;
 	height: 50px;
 	width: 7rem;
 	background-color: blue;

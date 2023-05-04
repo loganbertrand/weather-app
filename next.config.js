@@ -7,6 +7,16 @@ const nextConfig = {
 	compiler: {
 		styledComponents: true,
 	},
+	images: {
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "openweathermap.org",
+				port: "",
+				pathname: "/img/wn/**",
+			},
+		],
+	},
 }
 
 module.exports = nextConfig
