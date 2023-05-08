@@ -22,6 +22,9 @@ export default function Home() {
 		tempMax: 0,
 		tempMin: 0,
 		description: "",
+		date: "",
+		time: "",
+		location: "",
 	})
 
 	const handleChange = (e: any) => {
@@ -47,6 +50,16 @@ export default function Home() {
 				`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`
 			)
 			console.log("API response: ", response.data)
+			console.log(
+				"Date format: ",
+				new Date(response.data.dt * 1000).toDateString()
+			)
+
+			const forecast = await axios.get(
+				`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=imperial`
+			)
+			console.log("Forecast data: ", forecast.data)
+
 			setWeather({
 				temp: Math.trunc(response.data.main.temp),
 				icon: response.data.weather[0].icon,
@@ -56,6 +69,9 @@ export default function Home() {
 				tempMax: Math.trunc(response.data.main.temp_max),
 				tempMin: Math.trunc(response.data.main.temp_min),
 				description: response.data.weather[0].description,
+				date: new Date(response.data.dt * 1000).toDateString(),
+				time: new Date(response.data.dt * 1000).toLocaleTimeString(),
+				location: response.data.name,
 			})
 		} catch (error) {
 			console.log(error)
@@ -68,7 +84,7 @@ export default function Home() {
 				<title>Weather App | Logan Bertrand</title>
 				<meta
 					name="description"
-					content="A Weather App built with React, Typescript, and Styled components for unique design and full front end experience showcase"
+					content="A Weather App built with React, Typescript, Next js and Styled components for unique design and full front end experience showcase"
 				/>
 				<meta
 					name="viewport"
@@ -80,32 +96,51 @@ export default function Home() {
 				<div className={styles.description}>
 					<Title>Weather App</Title>
 				</div>
-
+				<Input
+					value={textValue}
+					onChange={handleChange}
+					onKeyDown={checkKeyDown}
+				/>
+				<Button onClick={handleSubmit}>Submit</Button>
 				<div className={styles.center}>
-					<Input
-						value={textValue}
-						onChange={handleChange}
-						onKeyDown={checkKeyDown}
-					/>
-					<Button onClick={handleSubmit}>Submit</Button>
-					<Icon
-						src={`https://openweathermap.org/img/wn/${
-							weather.icon ? weather.icon : "01d"
-						}@2x.png`}
-						width={100}
-						height={100}
-						alt="Icon of the type of weather"
-					/>
-					<p>{weather.description}</p>
-					<p>Temperature: {weather.temp}° F</p>
-					<p>Feels Like:{weather.feelsLike}° F</p>
-					<p>High:{weather.tempMax}° F</p>
-					<p>Low: {weather.tempMin}° F</p>
-					<p>Humidity:{weather.humidity}%</p>
-					<p>Wind:{weather.windSpeed} mph</p>
-				</div>
+					<div
+						style={{
+							width: "70%",
+							display: "flex",
+							justifyContent: "space-between",
+						}}
+					>
+						<div>
+							<Location>{weather.location}</Location>
+							<Temperature> {weather.temp}° F</Temperature>
+							<div
+								style={{
+									display: "flex",
+									justifyContent: "space-between",
+								}}
+							>
+								<p>High:{weather.tempMax}° F</p>
+								<p>Low: {weather.tempMin}° F</p>
+							</div>
+							<p>{weather.description}</p>
 
-				<div className={styles.grid}></div>
+							<p>Feels Like:{weather.feelsLike}° F</p>
+
+							<p>Humidity:{weather.humidity}%</p>
+							<p>Wind:{weather.windSpeed} mph</p>
+						</div>
+						<div>
+							<Icon
+								src={`https://openweathermap.org/img/wn/${
+									weather.icon ? weather.icon : "01d"
+								}@2x.png`}
+								width={150}
+								height={150}
+								alt="Icon of the type of weather"
+							/>
+						</div>
+					</div>
+				</div>
 			</main>
 		</>
 	)
@@ -113,6 +148,12 @@ export default function Home() {
 
 const Title = styled.p`
 	font-size: 1.5rem;
+`
+const Location = styled.p`
+	font-size: 2rem;
+`
+const Temperature = styled.p`
+	font-size: 4.5rem;
 `
 
 const Icon = styled(Image)``

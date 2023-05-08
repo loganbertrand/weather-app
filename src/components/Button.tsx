@@ -22,7 +22,6 @@ const ButtonContainer = styled.div`
 	width: 7rem;
 	background-color: blue;
 	color: white;
-	margin-top: 2rem;
 	display: flex;
 	justify-content: center;
 	align-items: center;
