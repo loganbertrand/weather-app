@@ -26,6 +26,17 @@ export default function Home() {
 		time: "",
 		location: "",
 	})
+	const [day1, setDay1] = useState({
+		temp: 0,
+		icon: "",
+		feelsLike: 0,
+		humidity: "",
+		tempMax: 0,
+		tempMin: 0,
+		description: "",
+		date: "",
+		time: "",
+	})
 
 	const handleChange = (e: any) => {
 		setTextValue(e.target.value)
@@ -72,6 +83,20 @@ export default function Home() {
 				date: new Date(response.data.dt * 1000).toDateString(),
 				time: new Date(response.data.dt * 1000).toLocaleTimeString(),
 				location: response.data.name,
+			})
+			setDay1({
+				temp: Math.trunc(forecast.data.list[0].main.temp),
+				icon: forecast.data.list[0].weather[0].icon,
+				feelsLike: Math.trunc(forecast.data.list[0].main.feels_like),
+				humidity: forecast.data.list[0].main.humidity,
+
+				tempMax: Math.trunc(forecast.data.list[0].main.temp_max),
+				tempMin: Math.trunc(forecast.data.list[0].main.temp_min),
+				description: forecast.data.list[0].weather[0].description,
+				date: new Date(forecast.data.list[0].dt * 1000).toDateString(),
+				time: new Date(
+					forecast.data.list[0].dt * 1000
+				).toLocaleTimeString(),
 			})
 		} catch (error) {
 			console.log(error)
@@ -140,6 +165,13 @@ export default function Home() {
 							/>
 						</div>
 					</div>
+					<div>
+						<Title>Forecast</Title>
+						<div>
+							<p>Day 1 Date: {day1.date}</p>
+							<p>Day 1 Time: {day1.time}</p>
+						</div>
+					</div>
 				</div>
 			</main>
 		</>
@@ -148,12 +180,16 @@ export default function Home() {
 
 const Title = styled.p`
 	font-size: 1.5rem;
+	font-family: Roboto;
 `
 const Location = styled.p`
 	font-size: 2rem;
+	font-family: Roboto;
 `
 const Temperature = styled.p`
 	font-size: 4.5rem;
+	font-family: Roboto;
+	font-weight: 700;
 `
 
 const Icon = styled(Image)``

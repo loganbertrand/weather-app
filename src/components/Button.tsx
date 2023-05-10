@@ -20,9 +20,12 @@ const ButtonContainer = styled.div`
 	cursor: pointer;
 	height: 50px;
 	width: 7rem;
-	background-color: blue;
-	color: white;
+	background-color: white;
+	border-radius: 10px;
+	color: black;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	font-family: Roboto;
+	font-size: 16px;
 `

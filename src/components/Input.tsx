@@ -22,4 +22,6 @@ export default Input
 const InputWrapper = styled.input`
 	height: 70px;
 	width: 70%;
+	font-size: 2rem;
+	font-family: Roboto;
 `
