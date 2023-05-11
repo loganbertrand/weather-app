@@ -10,9 +10,8 @@ import Input from "@/components/Input"
 import Button from "@/components/Button"
 
 export default function Home() {
+	const forecastArray: Array<any> = []
 	const [textValue, setTextValue] = useState("")
-	const [temp, setTemp] = useState(0)
-	const [icon, setIcon] = useState("")
 	const [weather, setWeather] = useState({
 		temp: 0,
 		icon: "",
@@ -25,17 +24,6 @@ export default function Home() {
 		date: "",
 		time: "",
 		location: "",
-	})
-	const [day1, setDay1] = useState({
-		temp: 0,
-		icon: "",
-		feelsLike: 0,
-		humidity: "",
-		tempMax: 0,
-		tempMin: 0,
-		description: "",
-		date: "",
-		time: "",
 	})
 
 	const handleChange = (e: any) => {
@@ -71,6 +59,19 @@ export default function Home() {
 			)
 			console.log("Forecast data: ", forecast.data)
 
+			const listData = forecast.data.list
+
+			listData.forEach((element: any) => {
+				console.log(element)
+				const time = new Date(element.dt * 1000).toLocaleTimeString()
+
+				console.log(time)
+				if (time == "2:00:00 PM") {
+					console.log("there is something here")
+					forecastArray.push(element)
+				}
+			})
+
 			setWeather({
 				temp: Math.trunc(response.data.main.temp),
 				icon: response.data.weather[0].icon,
@@ -83,20 +84,6 @@ export default function Home() {
 				date: new Date(response.data.dt * 1000).toDateString(),
 				time: new Date(response.data.dt * 1000).toLocaleTimeString(),
 				location: response.data.name,
-			})
-			setDay1({
-				temp: Math.trunc(forecast.data.list[0].main.temp),
-				icon: forecast.data.list[0].weather[0].icon,
-				feelsLike: Math.trunc(forecast.data.list[0].main.feels_like),
-				humidity: forecast.data.list[0].main.humidity,
-
-				tempMax: Math.trunc(forecast.data.list[0].main.temp_max),
-				tempMin: Math.trunc(forecast.data.list[0].main.temp_min),
-				description: forecast.data.list[0].weather[0].description,
-				date: new Date(forecast.data.list[0].dt * 1000).toDateString(),
-				time: new Date(
-					forecast.data.list[0].dt * 1000
-				).toLocaleTimeString(),
 			})
 		} catch (error) {
 			console.log(error)
@@ -168,8 +155,19 @@ export default function Home() {
 					<div>
 						<Title>Forecast</Title>
 						<div>
-							<p>Day 1 Date: {day1.date}</p>
-							<p>Day 1 Time: {day1.time}</p>
+							{forecastArray.map((data: any) => {
+								return (
+									<div className={styles.card} key={data.dt}>
+										<p>{data.main.temp}</p>
+										<p>
+											{new Date(
+												data.dt * 1000
+											).toDateString()}
+										</p>
+										<p>test</p>
+									</div>
+								)
+							})}
 						</div>
 					</div>
 				</div>
