@@ -10,7 +10,8 @@ import Input from "@/components/Input"
 import Button from "@/components/Button"
 
 export default function Home() {
-	const forecastArray: Array<any> = []
+	const [array, setArray] = useState([])
+	const [loading, setLoading] = useState(false)
 	const [textValue, setTextValue] = useState("")
 	const [weather, setWeather] = useState({
 		temp: 0,
@@ -37,11 +38,25 @@ export default function Home() {
 		}
 	}
 
-	const handleSubmit = async () => {
-		console.log(
-			"submit. API Key? ",
-			process.env.NEXT_PUBLIC_OPENWEATHER_API
+	const forecastList = array.map((data: any) => {
+		return (
+			<span className={styles.card} key={data.dt}>
+				<Icon
+					src={`https://openweathermap.org/img/wn/${
+						data.weather[0].icon ? data.weather[0].icon : "01d"
+					}@2x.png`}
+					width={50}
+					height={50}
+					alt="Icon of the type of weather"
+				/>
+				<ForecastTemp>{Math.trunc(data.main.temp)}</ForecastTemp>
+				<p>{new Date(data.dt * 1000).toDateString()}</p>
+			</span>
 		)
+	})
+
+	const handleSubmit = async () => {
+		setLoading(true)
 		const city = textValue
 		const apiKey = process.env.NEXT_PUBLIC_OPENWEATHER_API
 		try {
@@ -49,10 +64,6 @@ export default function Home() {
 				`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=imperial`
 			)
 			console.log("API response: ", response.data)
-			console.log(
-				"Date format: ",
-				new Date(response.data.dt * 1000).toDateString()
-			)
 
 			const forecast = await axios.get(
 				`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=imperial`
@@ -60,18 +71,17 @@ export default function Home() {
 			console.log("Forecast data: ", forecast.data)
 
 			const listData = forecast.data.list
+			const forecastArray: any = []
 
 			listData.forEach((element: any) => {
-				console.log(element)
 				const time = new Date(element.dt * 1000).toLocaleTimeString()
-
 				console.log(time)
 				if (time == "2:00:00 PM") {
 					console.log("there is something here")
 					forecastArray.push(element)
 				}
 			})
-
+			setArray(forecastArray)
 			setWeather({
 				temp: Math.trunc(response.data.main.temp),
 				icon: response.data.weather[0].icon,
@@ -85,6 +95,7 @@ export default function Home() {
 				time: new Date(response.data.dt * 1000).toLocaleTimeString(),
 				location: response.data.name,
 			})
+			setLoading(false)
 		} catch (error) {
 			console.log(error)
 		}
@@ -120,6 +131,7 @@ export default function Home() {
 							width: "70%",
 							display: "flex",
 							justifyContent: "space-between",
+							margin: "3rem 0",
 						}}
 					>
 						<div>
@@ -152,24 +164,12 @@ export default function Home() {
 							/>
 						</div>
 					</div>
-					<div>
-						<Title>Forecast</Title>
-						<div>
-							{forecastArray.map((data: any) => {
-								return (
-									<div className={styles.card} key={data.dt}>
-										<p>{data.main.temp}</p>
-										<p>
-											{new Date(
-												data.dt * 1000
-											).toDateString()}
-										</p>
-										<p>test</p>
-									</div>
-								)
-							})}
+					{!loading && array.length >= 1 && (
+						<div style={{ width: "70%" }}>
+							<Title>Forecast</Title>
+							<div className={styles.grid}>{forecastList}</div>
 						</div>
-					</div>
+					)}
 				</div>
 			</main>
 		</>
@@ -186,6 +186,11 @@ const Location = styled.p`
 `
 const Temperature = styled.p`
 	font-size: 4.5rem;
+	font-family: Roboto;
+	font-weight: 700;
+`
+const ForecastTemp = styled.p`
+	font-size: 2rem;
 	font-family: Roboto;
 	font-weight: 700;
 `

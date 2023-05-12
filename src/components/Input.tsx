@@ -24,4 +24,5 @@ const InputWrapper = styled.input`
 	width: 70%;
 	font-size: 2rem;
 	font-family: Roboto;
+	margin: 2.5rem 0;
 `
