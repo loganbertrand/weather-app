@@ -126,14 +126,7 @@ export default function Home() {
 				/>
 				<Button onClick={handleSubmit}>Submit</Button>
 				<div className={styles.center}>
-					<div
-						style={{
-							width: "70%",
-							display: "flex",
-							justifyContent: "space-between",
-							margin: "3rem 0",
-						}}
-					>
+					<div className={styles.weatherMain}>
 						<div>
 							<Location>{weather.location}</Location>
 							<Temperature> {weather.temp}° F</Temperature>
@@ -165,7 +158,7 @@ export default function Home() {
 						</div>
 					</div>
 					{!loading && array.length >= 1 && (
-						<div style={{ width: "70%" }}>
+						<div className={styles.forecastWrap}>
 							<Title>Forecast</Title>
 							<div className={styles.grid}>{forecastList}</div>
 						</div>

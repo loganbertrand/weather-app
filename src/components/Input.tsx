@@ -22,6 +22,9 @@ export default Input
 const InputWrapper = styled.input`
 	height: 70px;
 	width: 70%;
+	@media (max-width: 768px) {
+		width: 100%;
+	}
 	font-size: 2rem;
 	font-family: Roboto;
 	margin: 2.5rem 0;

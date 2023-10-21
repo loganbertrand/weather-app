@@ -3,8 +3,11 @@
 	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
-	padding: 6rem;
+	padding: 6rem 6rem;
 	min-height: 100vh;
+	@media (max-width: 768px) {
+		padding: 6rem 2rem;
+	}
 }
 
 .description {
@@ -53,6 +56,9 @@
 	background: rgba(var(--card-rgb), 0.1);
 	border: 1px solid rgba(var(--card-border-rgb), 0.15);
 	transition: background 200ms, border 200ms;
+	@media (max-width: 1124px) {
+		margin: 1rem 1rem;
+	}
 }
 
 .card span {
@@ -80,6 +86,26 @@
 	position: relative;
 	padding: 4rem 0;
 	width: 100%;
+}
+
+.weatherMain {
+	width: 70%;
+	display: flex;
+	justify-content: space-between;
+	margin: 3rem 0;
+	@media (max-width: 768px) {
+		width: 90%;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-items: center;
+	}
+}
+
+.forecastWrap {
+	width: 70%;
+	@media (max-width: 768px) {
+		width: 100%;
+	}
 }
 
 /* .center::before {
